@@ -1,0 +1,16 @@
+.git
+.github
+.idea
+.vscode
+.env
+.env.*
+http
+uploads
+bin
+tmp
+*.md
+*.out
+*.test
+coverage.*
+docker-compose.yml
+Dockerfile

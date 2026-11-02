@@ -1,0 +1,94 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  GO_VERSION: "1.24"
+
+jobs:
+  test:
+    name: Build, vet & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Download and verify modules
+        run: |
+          go mod download
+          go mod verify
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test -race -count=1 -coverprofile=coverage.out ./...
+
+      - name: Coverage summary
+        run: go tool cover -func=coverage.out | tail -n 1
+
+  deploy:
+    name: Deploy to server
+    needs: test
+    # Only for pushes to main in the upstream repository - never for pull
+    # requests or forks (which do not have the deployment secrets anyway).
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'guvanch999/abrayly-mebel-backend'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          install -m 600 /dev/null ~/.ssh/id_rsa
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          ssh-keyscan -H "$REMOTE_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Pull, build and restart the systemd service
+        env:
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_TARGET: ${{ secrets.REMOTE_TARGET }}
+        run: |
+          ssh "$REMOTE_USER@$REMOTE_HOST" "bash -s -- $(printf '%q' "$REMOTE_TARGET")" <<'SCRIPT'
+          set -euo pipefail
+          export PATH=/usr/local/go/bin:$PATH
+          cd "$1"
+          echo "Updating working copy..."
+          git checkout main
+          git checkout -- .
+          git pull --ff-only origin main
+          echo "Downloading Go modules..."
+          go mod download
+          echo "Building..."
+          go build -o abrayly-mebel-backend .
+          echo "Restarting service..."
+          sudo systemctl restart abraylybackend
+          sudo systemctl status abraylybackend --no-pager
+          SCRIPT
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -rf ~/.ssh

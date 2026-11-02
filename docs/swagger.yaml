@@ -1,0 +1,1012 @@
+definitions:
+  dto.AttributeDto:
+    properties:
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      type:
+        type: string
+      values:
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - name_en
+    - name_ru
+    - name_tm
+    - type
+    - values
+    type: object
+  dto.AttributeValueDto:
+    properties:
+      attributeID:
+        type: string
+      value:
+        type: string
+    required:
+    - attributeID
+    - value
+    type: object
+  dto.BannerResponse:
+    properties:
+      id:
+        type: string
+      image:
+        type: string
+      link:
+        type: string
+    type: object
+  dto.CategoryDto:
+    properties:
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      parent_id:
+        type: string
+    required:
+    - name_en
+    - name_ru
+    - name_tm
+    type: object
+  dto.CategoryResponseDto:
+    properties:
+      id:
+        type: string
+      image_url:
+        type: string
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      parent_id:
+        type: string
+      subcategories:
+        items:
+          $ref: '#/definitions/dto.CategoryResponseDto'
+        type: array
+    type: object
+  dto.FilterDto:
+    properties:
+      category_id:
+        type: string
+    type: object
+  dto.LoginRequestDto:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.PaginateDto:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+    type: object
+  dto.ProductDto:
+    properties:
+      category_id:
+        type: string
+      discount:
+        type: number
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      old_price:
+        type: number
+      price:
+        type: number
+    required:
+    - category_id
+    - name_en
+    - name_ru
+    - name_tm
+    - price
+    type: object
+  dto.ProductResponseDto:
+    properties:
+      category_name:
+        type: string
+      data:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.RefreshTokenRequestDto:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.TokenResponseDto:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  exceptions.ResponseError:
+    properties:
+      code:
+        type: integer
+      details:
+        type: string
+      message:
+        type: string
+    type: object
+  models.Attribute:
+    properties:
+      id:
+        type: string
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      product_id:
+        type: string
+      type:
+        type: string
+      values:
+        items:
+          type: string
+        type: array
+    type: object
+  models.Banner:
+    properties:
+      id:
+        type: string
+      image:
+        type: string
+      link:
+        type: string
+    type: object
+  models.Category:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      parent:
+        $ref: '#/definitions/models.Category'
+      parent_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      attributes:
+        items:
+          $ref: '#/definitions/models.Attribute'
+        type: array
+      category:
+        $ref: '#/definitions/models.Category'
+      category_id:
+        type: string
+      created_at:
+        type: string
+      discount:
+        type: number
+      id:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/models.ProductImage'
+        type: array
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      name_tm:
+        type: string
+      old_price:
+        type: number
+      price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  models.ProductImage:
+    properties:
+      id:
+        type: string
+      image_url:
+        type: string
+      product_id:
+        type: string
+    type: object
+  util.DataWrapper-dto_ProductDto:
+    properties:
+      data:
+        $ref: '#/definitions/dto.ProductDto'
+    type: object
+  util.DataWrapper-dto_TokenResponseDto:
+    properties:
+      data:
+        $ref: '#/definitions/dto.TokenResponseDto'
+    type: object
+  util.ListData-array_dto_BannerResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dto.BannerResponse'
+        type: array
+    type: object
+  util.ListData-array_dto_CategoryResponseDto:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dto.CategoryResponseDto'
+        type: array
+    type: object
+  util.ListData-dto_ProductResponseDto:
+    properties:
+      list:
+        $ref: '#/definitions/dto.ProductResponseDto'
+    type: object
+  util.ListDataWrapper-array_dto_BannerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/util.ListData-array_dto_BannerResponse'
+    type: object
+  util.ListDataWrapper-array_dto_CategoryResponseDto:
+    properties:
+      data:
+        $ref: '#/definitions/util.ListData-array_dto_CategoryResponseDto'
+    type: object
+  util.ListDataWrapper-dto_ProductResponseDto:
+    properties:
+      data:
+        $ref: '#/definitions/util.ListData-dto_ProductResponseDto'
+    type: object
+  util.MessageWrapper:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: guvanch.d.1999@gmail.com
+    name: API Support
+  title: Abrayly API
+  version: "1.0"
+paths:
+  /admin/banners:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new banner with an optional link and image
+      parameters:
+      - description: Link of the banner
+        in: formData
+        name: link
+        type: string
+      - description: Image of the banner
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Banner'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Create a new banner
+      tags:
+      - banners
+  /admin/banners/{id}:
+    delete:
+      description: Delete a banner
+      parameters:
+      - description: ID of the banner
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Delete a banner
+      tags:
+      - banners
+    put:
+      description: Update a banner
+      parameters:
+      - description: ID of the banner
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Banner'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Update a banner
+      tags:
+      - banners
+  /auth/admin/login:
+    post:
+      consumes:
+      - application/json
+      description: Login to the system
+      parameters:
+      - description: Login request
+        in: body
+        name: loginRequestDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.DataWrapper-dto_TokenResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Login
+      tags:
+      - auth
+  /auth/admin/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh token
+      parameters:
+      - description: Refresh token request
+        in: body
+        name: refreshTokenRequestDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.DataWrapper-dto_TokenResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Refresh Token
+      tags:
+      - auth
+  /banners:
+    get:
+      description: Get all banners
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ListDataWrapper-array_dto_BannerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Get all banners
+      tags:
+      - banners
+  /banners/{id}:
+    get:
+      description: Get a banner by ID
+      parameters:
+      - description: ID of the banner
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Banner'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Get a banner by ID
+      tags:
+      - banners
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ListDataWrapper-array_dto_CategoryResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Get All Categories
+      tags:
+      - categories
+    post:
+      consumes:
+      - application/json
+      description: Create a new category
+      parameters:
+      - description: Category
+        in: body
+        name: categoryDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CategoryDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Create Category
+      tags:
+      - categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CategoryDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Delete Category
+      tags:
+      - categories
+    get:
+      consumes:
+      - application/json
+      description: Get a category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CategoryDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Get Category
+      tags:
+      - categories
+    put:
+      consumes:
+      - application/json
+      description: Update a category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category
+        in: body
+        name: categoryDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CategoryDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Update Category
+      tags:
+      - categories
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products
+      parameters:
+      - description: Paginate
+        in: body
+        name: paginateDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PaginateDto'
+      - description: Filter
+        in: body
+        name: filterDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FilterDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ListDataWrapper-dto_ProductResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Get Products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      parameters:
+      - description: Product
+        in: body
+        name: productDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProductDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/util.DataWrapper-dto_ProductDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Create Product
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Delete Product
+    get:
+      consumes:
+      - application/json
+      description: Get a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.DataWrapper-dto_ProductDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      summary: Get Product
+    put:
+      consumes:
+      - application/json
+      description: Update a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product
+        in: body
+        name: productDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProductDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.DataWrapper-dto_ProductDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Update Product
+  /products/{id}/attributes:
+    post:
+      consumes:
+      - application/json
+      description: Add an attribute to a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Attribute
+        in: body
+        name: attributeDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AttributeDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Add Attribute to Product
+  /products/{id}/attributes/{attribute_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove an attribute from a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Attribute ID
+        in: path
+        name: attribute_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Remove Attribute from Product
+  /products/{id}/attributes/{attribute_id}/values:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a value from an attribute
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Attribute ID
+        in: path
+        name: attribute_id
+        required: true
+        type: string
+      - description: Remove Value
+        in: body
+        name: removeValueDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AttributeValueDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Remove Value from Attribute
+    post:
+      consumes:
+      - application/json
+      description: Add a value to an attribute
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Attribute ID
+        in: path
+        name: attribute_id
+        required: true
+        type: string
+      - description: Add Value
+        in: body
+        name: addValueDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AttributeValueDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Add Value to Attribute
+  /products/{id}/images:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Add an image to a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Add Image to Product
+  /products/{id}/images/{image_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove an image from a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Image ID
+        in: path
+        name: image_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.MessageWrapper'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exceptions.ResponseError'
+      security:
+      - Bearer: []
+      summary: Remove Image from Product
+securityDefinitions:
+  Bearer:
+    description: Bearer token is required to access the Abrayly API. If you don't
+      have a token, please register in the system first
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

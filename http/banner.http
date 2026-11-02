@@ -1,0 +1,42 @@
+# Home-page banners.
+# Multipart requests read ./testfiles/sample.jpg - drop any image there
+# (the testfiles/ folder is git-ignored).
+
+@baseUrl = http://localhost:3030
+@accessToken = <access_token from auth.http>
+@bannerId = 00000000-0000-0000-0000-000000000000
+
+### List banners (public)
+GET {{baseUrl}}/banners
+
+### Get a banner (public)
+GET {{baseUrl}}/banners/{{bannerId}}
+
+### Create a banner (admin)
+POST {{baseUrl}}/admin/banners
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="link"
+
+https://example.com/collections/sofas
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="banner.jpg"
+Content-Type: image/jpeg
+
+< ./testfiles/sample.jpg
+--WebAppBoundary--
+
+### Update a banner link (admin)
+PUT {{baseUrl}}/admin/banners/{{bannerId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "link": "https://example.com/collections/beds"
+}
+
+### Delete a banner (admin)
+DELETE {{baseUrl}}/admin/banners/{{bannerId}}
+Authorization: Bearer {{accessToken}}

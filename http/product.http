@@ -1,0 +1,110 @@
+# Products, images and attributes.
+# Multipart requests read ./testfiles/sample.jpg - drop any image there
+# (the testfiles/ folder is git-ignored).
+
+@baseUrl = http://localhost:3030/api/v1
+@accessToken = <access_token from auth.http>
+@categoryId = 00000000-0000-0000-0000-000000000000
+@productId = 00000000-0000-0000-0000-000000000000
+@imageId = 00000000-0000-0000-0000-000000000000
+@attributeId = 00000000-0000-0000-0000-000000000000
+
+### List products (page/limit, optional category_id, search, is_discount)
+GET {{baseUrl}}/products?page=1&limit=10
+
+### Search by name in Turkmen, Russian or English
+GET {{baseUrl}}/products?search=sofa&page=1&limit=10
+
+### Discounted products of one category
+GET {{baseUrl}}/products?category_id={{categoryId}}&is_discount=true
+
+### Get a product with its attributes, images and category
+GET {{baseUrl}}/products/{{productId}}
+
+### Recommended products (same category, excluding this product)
+GET {{baseUrl}}/products/{{productId}}/recommended?page=1&limit=10
+
+### Create a product (admin)
+POST {{baseUrl}}/admin/products
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "category_id": "{{categoryId}}",
+  "name_tm": "Diwan",
+  "name_ru": "Диван",
+  "name_en": "Sofa",
+  "price": 1000,
+  "discount": 10,
+  "old_price": 1100
+}
+
+### Update a product (admin)
+PUT {{baseUrl}}/admin/products/{{productId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "category_id": "{{categoryId}}",
+  "name_tm": "Burç diwany",
+  "name_ru": "Угловой диван",
+  "name_en": "Corner sofa",
+  "price": 1200,
+  "discount": 15,
+  "old_price": 1400
+}
+
+### Delete a product with its images and attributes (admin)
+DELETE {{baseUrl}}/admin/products/{{productId}}
+Authorization: Bearer {{accessToken}}
+
+### Add an image (admin)
+POST {{baseUrl}}/admin/products/{{productId}}/images
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="sofa.jpg"
+Content-Type: image/jpeg
+
+< ./testfiles/sample.jpg
+--WebAppBoundary--
+
+### Remove an image (admin)
+DELETE {{baseUrl}}/admin/products/{{productId}}/images/{{imageId}}
+Authorization: Bearer {{accessToken}}
+
+### Add an attribute (admin)
+POST {{baseUrl}}/admin/products/{{productId}}/attributes
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name_tm": "Reňk",
+  "name_ru": "Цвет",
+  "name_en": "Color",
+  "type": "color",
+  "values": ["#8B5A2B", "#D2B48C", "#2F4F4F"]
+}
+
+### Remove an attribute (admin)
+DELETE {{baseUrl}}/admin/products/{{productId}}/attributes/{{attributeId}}
+Authorization: Bearer {{accessToken}}
+
+### Add a value to an attribute (admin)
+POST {{baseUrl}}/admin/products/{{productId}}/attributes/{{attributeId}}/values
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "value": "#FFFFFF"
+}
+
+### Remove a value from an attribute (admin)
+POST {{baseUrl}}/admin/products/{{productId}}/attributes/{{attributeId}}/values/delete
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "value": "#FFFFFF"
+}

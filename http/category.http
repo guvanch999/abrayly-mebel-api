@@ -1,0 +1,89 @@
+# Category tree.
+# Multipart requests read ./testfiles/sample.jpg - drop any image there
+# (the testfiles/ folder is git-ignored).
+
+@baseUrl = http://localhost:3030/api/v1
+@accessToken = <access_token from auth.http>
+@categoryId = 00000000-0000-0000-0000-000000000000
+@parentId = 00000000-0000-0000-0000-000000000000
+
+### Get the full category tree (public)
+GET {{baseUrl}}/categories
+
+### Get a category (public)
+GET {{baseUrl}}/categories/{{categoryId}}
+
+### Create a root category (admin)
+POST {{baseUrl}}/admin/categories
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name_tm"
+
+Ýatylýan otag
+--WebAppBoundary
+Content-Disposition: form-data; name="name_ru"
+
+Спальня
+--WebAppBoundary
+Content-Disposition: form-data; name="name_en"
+
+Bedroom
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="bedroom.jpg"
+Content-Type: image/jpeg
+
+< ./testfiles/sample.jpg
+--WebAppBoundary--
+
+### Create a subcategory (admin)
+POST {{baseUrl}}/admin/categories
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name_tm"
+
+Krowatlar
+--WebAppBoundary
+Content-Disposition: form-data; name="name_ru"
+
+Кровати
+--WebAppBoundary
+Content-Disposition: form-data; name="name_en"
+
+Beds
+--WebAppBoundary
+Content-Disposition: form-data; name="parent_id"
+
+{{parentId}}
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="beds.jpg"
+Content-Type: image/jpeg
+
+< ./testfiles/sample.jpg
+--WebAppBoundary--
+
+### Update a category; the image part is optional (admin)
+PUT {{baseUrl}}/admin/categories/{{categoryId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name_tm"
+
+Ýatylýan otag
+--WebAppBoundary
+Content-Disposition: form-data; name="name_ru"
+
+Спальня
+--WebAppBoundary
+Content-Disposition: form-data; name="name_en"
+
+Bedroom furniture
+--WebAppBoundary--
+
+### Delete a category and its subcategories (admin)
+DELETE {{baseUrl}}/admin/categories/{{categoryId}}
+Authorization: Bearer {{accessToken}}

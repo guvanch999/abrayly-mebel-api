@@ -1,0 +1,25 @@
+# Admin authentication.
+# Works with the JetBrains HTTP Client and the VS Code REST Client extension.
+# Credentials are the ADMIN_USERNAME / ADMIN_PASSWORD values from your local .env.
+
+@baseUrl = http://localhost:3030
+@username = admin
+@password = <your ADMIN_PASSWORD>
+@refreshToken = <refresh_token from the login response>
+
+### Login (returns access_token + refresh_token)
+POST {{baseUrl}}/auth/admin/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Refresh the token pair
+POST {{baseUrl}}/auth/admin/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "{{refreshToken}}"
+}

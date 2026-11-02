@@ -1,0 +1,57 @@
+# Local stack: PostgreSQL + the API.
+#
+#   cp .env.example .env   # then set the secrets and ADMIN_PASSWORD
+#   docker compose up --build
+#
+# API:     http://localhost:3030
+# Swagger: http://localhost:3030/swagger/index.html
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-abrayly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-abrayly}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT:-3030}:3030"
+    environment:
+      GO_ENV: ${GO_ENV:-development}
+      PORT: "3030"
+      APP_URL: ${APP_URL:-}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-*}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${POSTGRES_USER:-abrayly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-abrayly}
+      POSTGRES_SSLMODE: disable
+      # Create the schema and seed the first admin on start-up.
+      DISABLE_AUTO_MIGRATION: ${DISABLE_AUTO_MIGRATION:-false}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:?set ADMIN_JWT_SECRET in .env}
+      ADMIN_REFRESH_SECRET: ${ADMIN_REFRESH_SECRET:?set ADMIN_REFRESH_SECRET in .env}
+      ADMIN_NAME: ${ADMIN_NAME:-Administrator}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      # Leave empty to skip seeding (a warning is logged).
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes:
+      - uploads:/app/uploads
+
+volumes:
+  pgdata:
+  uploads:

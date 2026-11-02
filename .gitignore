@@ -1,0 +1,36 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/abrayly-mebel-backend
+/bin/
+/tmp/
+
+# Test binaries and coverage output
+*.test
+*.out
+coverage.*
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Local environment (see .env.example)
+.env
+.env.*
+!.env.example
+
+# Sample files for the requests in http/
+http/testfiles/
+
+# Files uploaded at runtime
+uploads/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
